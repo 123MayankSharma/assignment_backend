@@ -16,7 +16,7 @@ const HistorySchema=new mongoose.Schema({
      require:true,
   },
   watched_at:{
-      type:Date,
+      type:String,
       require:true
 }
 },{timestamps:true});

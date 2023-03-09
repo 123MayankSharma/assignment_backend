@@ -25,27 +25,29 @@ mongoose
     console.log(err);
   })
 
+  //for getting all categories
 app.get("/",async(req,res)=>{
   try{
   const allCategories=await Categories.find({});
   res.status(200).json(allCategories)
-  console.log(allCategories)
-  }catch{
+  }catch(err){
     res.status(500).json(err)
   }
 
 })
 
+//for getting all history
 app.get("/history",async (req,res)=>{
 	try{
       const prev_cards=await history.find({})
-      // res.status(200).json(allPins)
+      res.status(200).json(prev_cards)
       console.log(prev_cards)
   }catch(err){
     res.status(500).json(err)
   }
 })
 
+//for adding new category
 app.post("/newCategory",async (req,res)=>{
   const newCategory=new Categories(req.body)
 
@@ -57,6 +59,7 @@ app.post("/newCategory",async (req,res)=>{
   }
 })
 
+//for adding new card in a category
 app.post("/newCard",async (req,res)=>{
   const newCard=new Cards(req.body)
 
@@ -68,7 +71,41 @@ app.post("/newCard",async (req,res)=>{
   }
 })
 
+//for getting all existing cards in a category
+app.post("/categoryCards",async(req,res)=>{
+  const obj={"category_id":req.body.category_id}
+  try{
+    const categoryCards=await Cards.find(obj)
+    res.status(200).json(categoryCards)
+  }catch(err){
+    res.status(500).send(err)
+  }
+})
 
+//for adding cards to history
+app.post("/addToHistory",async(req,res)=>{
+  const lastCard=new history(req.body)
+    try{
+      const storedCard=await lastCard.save()
+      res.status(200).json(storedCard())
+    }catch(err){
+      res.status(500).send(err)
+    }
+})
+
+//endpoint for deleting cards
+app.post("/deleteCards",async(req,res)=>{
+    try{
+      const deletedCards=await Cards.deleteMany({_id:req.body.cards})
+      res.status(200)
+    }catch(err){
+      res.status(500).send(err)
+    }
+
+})
+
+app.post("/moveCard",async(req,res)=>{
+})
 
 
 
